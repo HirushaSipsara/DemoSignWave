@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP Tilt Sensor Audio Feedback</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Courier Prime', monospace;
+            text-align: center;
+            padding: 50px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #333;
+        }
+        .direction {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #a4a5a5, #3a47d5); 
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            font-size: xx-large;
+            font-family: 'Courier Prime', monospace;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+        .btn-custom {
+            background-color: #3a47d5;
+            border-color: #3a47d5;
+            color: white;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        const audioFiles = {
+            "Tilt Right": "./mp3/TiltRight.mp3",
+            "Tilt Left": "./mp3/TiltLeft.mp3",
+            "Tilt Forward": "./mp3/TiltForward.mp3",
+            "Tilt Backward": "./mp3/TiltBackward.mp3",
+            "Flat": "./mp3/Flat.mp3",
+            "Upside Down": "./mp3/UpsideDown.mp3",
+            "Neutral": "./mp3/Neutral.mp3"
+        };
+
+        let lastDirection = '';  // To store the last direction
+
+        const socket = new WebSocket('ws://192.168.1.110/ws'); // Replace with your ESP's IP
+
+        socket.onopen = function(event) {
+            console.log('Connected to WebSocket server.');
+        };
+
+        socket.onmessage = function(event) {
+            const direction = event.data.trim();
+            if (direction !== lastDirection) {
+                updateDirection(direction);  // Update and play audio only if direction changed
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.log('WebSocket Error:', error);
+        };
+
+        socket.onclose = function(event) {
+            console.log('WebSocket connection closed.');
+        };
+
+        // Function to update direction text and play audio if it changed
+        function updateDirection(direction) {
+            document.getElementById('direction-display').innerText = direction; // Update the direction text
+            playAudio(direction);  // Play the corresponding audio
+            lastDirection = direction;  // Store the new direction
+        }
+
+        // Function to play audio based on direction
+        function playAudio(direction) {
+            if (audioFiles[direction]) {
+                const audio = new Audio(audioFiles[direction]);
+                audio.play();
+            }
+        }
+    </script>
+</head>
+<body style="background: linear-gradient(135deg, #a4a5a5, #3a47d5);">
+    <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-decoration-none">
+        <pre></pre> 
+        <p class="gradient-text"><sub>Sign Wave</sub></p>
+    </a>
+
+    <h1>MPU6050 Tilt Direction</h1>
+    <p class="direction" id="direction-display">Neutral</p>
+
+    <button class="btn btn-custom" onclick="simulateDirectionChange()">Simulate Direction Change</button>
+
+    <script>
+        // Simulate direction change for testing
+        function simulateDirectionChange() {
+            const directions = ["Tilt Right", "Tilt Left", "Tilt Forward", "Tilt Backward", "Flat", "Upside Down", "Neutral"];
+            const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+            if (randomDirection !== lastDirection) {
+                updateDirection(randomDirection);
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
