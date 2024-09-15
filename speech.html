@@ -89,7 +89,7 @@
         };
 
         let lastDirection = '';
-        const socket = new WebSocket('ws://192.168.1.110/ws');
+        const socket = new WebSocket('wss://your-secure-websocket-url/ws'); // Ensure this is a secure URL
 
         socket.onopen = function () {
             console.log('Connected to WebSocket server.');
