@@ -26,13 +26,6 @@
     </style>
     <script>
         const audioFiles = {
-            "Tilt Right": "./mp3/TiltRight.mp3",
-            "Tilt Left": "./mp3/TiltLeft.mp3",
-            "Tilt Forward": "./mp3/TiltForward.mp3",
-            "Tilt Backward": "./mp3/TiltBackward.mp3",
-            "Flat": "./mp3/Flat.mp3",
-            "Upside Down": "./mp3/UpsideDown.mp3",
-            "Neutral": "./mp3/Neutral.mp3",
             "Mistake": "./mp3/Flat.mp3",
             "Name": "./mp3/UpsideDown.mp3",
             "Please": "./mp3/Neutral.mp3"
@@ -183,12 +176,12 @@
 
     <br><br><br>
     <div class="container text-center">
-
+      
     <h2>Select Mode</h2>
-    <button class="btn btn-primary btn-mode" onclick="selectMode(1)">Tilt Mode</button>
-    <button class="btn btn-secondary btn-mode" onclick="selectMode(2)">Gesture Mode</button>
+    <button class="btn btn-secondary btn-mode" onclick="selectMode(1)">Tilt Mode</button>
+    <button class="btn btn-primary btn-mode" onclick="selectMode(2)">Gesture Mode</button>
 
-    <h1>MPU6050 Tilt Direction</h1>
+    <h1>One Hand Sign Gestures</h1>
     <p class="direction" id="direction-display">Neutral</p>
 
     <button class="btn btn-primary" onclick="simulateDirectionChange()">Simulate Direction Change</button>
@@ -198,7 +191,7 @@
     <script>
          // Simulate direction change for testing
          function simulateDirectionChange() {
-            const directions = ["Tilt Right", "Tilt Left", "Tilt Forward", "Tilt Backward", "Flat", "Upside Down", "Neutral", "Mistake", "Name", "Please"];
+            const directions = ["Mistake", "Name", "Please"];
             const randomDirection = directions[Math.floor(Math.random() * directions.length)];
             if (randomDirection !== lastDirection) {
                 updateDirection(randomDirection);

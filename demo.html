@@ -36,6 +36,10 @@
             font-size: 1.2em;
             margin-top: 20px;
         }
+        .btn-mode {
+            margin: 10px;
+            font-size: 1.2em;
+        }
     </style>
     <script>
         const audioFiles = {
@@ -45,11 +49,13 @@
             "Tilt Backward": "./mp3/TiltBackward.mp3",
             "Flat": "./mp3/Flat.mp3",
             "Upside Down": "./mp3/UpsideDown.mp3",
-            "Neutral": "./mp3/Neutral.mp3"
+            "Neutral": "./mp3/Neutral.mp3",
+            "Mistake": "./mp3/Flat.mp3",
+            "Name": "./mp3/UpsideDown.mp3",
+            "Please": "./mp3/Neutral.mp3"
         };
 
         let lastDirection = '';  // To store the last direction
-
         const socket = new WebSocket('ws://192.168.1.110/ws'); // Replace with your ESP's IP
 
         socket.onopen = function(event) {
@@ -85,23 +91,31 @@
                 audio.play();
             }
         }
+
+        // Send selected mode to ESP via WebSocket
+        function selectMode(mode) {
+            socket.send(mode);
+        }
     </script>
 </head>
 <body style="background: linear-gradient(135deg, #a4a5a5, #3a47d5);">
     <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-decoration-none">
-        <pre></pre> 
         <p class="gradient-text"><sub>Sign Wave</sub></p>
     </a>
+
+    <button class="btn btn-primary btn-mode" onclick="selectMode(1)">Tilt Mode</button>
+    <button class="btn btn-secondary btn-mode" onclick="selectMode(2)">Gesture Mode</button>
 
     <h1>MPU6050 Tilt Direction</h1>
     <p class="direction" id="direction-display">Neutral</p>
 
     <button class="btn btn-custom" onclick="simulateDirectionChange()">Simulate Direction Change</button>
 
+    <h2>Select Mode</h2>
     <script>
         // Simulate direction change for testing
         function simulateDirectionChange() {
-            const directions = ["Tilt Right", "Tilt Left", "Tilt Forward", "Tilt Backward", "Flat", "Upside Down", "Neutral"];
+            const directions = ["Tilt Right", "Tilt Left", "Tilt Forward", "Tilt Backward", "Flat", "Upside Down", "Neutral", "Mistake", "Name", "Please"];
             const randomDirection = directions[Math.floor(Math.random() * directions.length)];
             if (randomDirection !== lastDirection) {
                 updateDirection(randomDirection);
